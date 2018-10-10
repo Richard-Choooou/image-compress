@@ -1,28 +1,36 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Dropzone from 'react-dropzone'
 import './App.css';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+
+    constructor(props) {
+        super(props)
+        this.onDrop = this.onDrop.bind(this) ;
+    }
+
+    onDrop(acceptedFiles) {
+        acceptedFiles.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const fileAsBinaryString = reader.result;
+                // do whatever you want with the file content
+                console.log(fileAsBinaryString)
+            };
+            reader.onabort = () => console.log('file reading was aborted');
+            reader.onerror = () => console.log('file reading has failed');
+
+            reader.readAsBinaryString(file);
+        });
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <Dropzone onDrop="{ this.onDrop }" />
+            </div>
+        );
+    }
 }
 
 export default App;
