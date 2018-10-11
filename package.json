@@ -5,10 +5,12 @@
   "main": "./main.js",
   "dependencies": {
     "electron": "^3.0.3",
+    "node-sass": "^4.9.3",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-dropzone": "^6.0.3",
-    "react-scripts": "2.0.4"
+    "react-scripts": "2.0.4",
+    "sass-loader": "^7.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

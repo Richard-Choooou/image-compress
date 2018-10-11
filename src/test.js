@@ -9,7 +9,7 @@ export default class Test extends Component{
     render() {
         return(
             <div>
-                <button onClick="{() => this.onClickFn()}">测试</button>
+                <button onClick={this.onClickFn}>测试</button>
             </div>
         )
     }
