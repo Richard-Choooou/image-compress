@@ -8,6 +8,7 @@ export default class DirManager extends Component {
                 <p className="dir-path">
                     /user/local/images
                 </p>
+                <button className="btn">选择</button>
             </div>
         )
     }

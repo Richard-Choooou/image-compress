@@ -3,10 +3,21 @@
     margin: 0 auto;
 
     .dir-path {
+        display: inline-block;
         padding-left: 10px;
         width: 350px;
         height: 20px;
         line-height: 20px;
         background: #bbb;
+    }
+
+    .btn {
+        display: inline-block;
+        margin-left: 14px; 
+        width: 50px;
+        height: 20px;
+        font-size: 16px;
+        background: transparent;
+        outline: none;
     }
 }
