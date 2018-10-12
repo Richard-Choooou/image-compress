@@ -1,35 +1,62 @@
-import React, { Component } from 'react';
-import Dropzone from 'react-dropzone';
-import './App.scss';
-const fs = require('fs');
-const uploadIcon = require('./static/images/upload.svg');
+import React, { Component } from 'react'
+import Dropzone from 'react-dropzone'
+import DirManager from './components/dir_manager/dir_manager'
+import './App.scss'
+
+const fs = window.require('fs')
+// const electron = window.require('electron')
+// const process = window.require('process')
+const Https = window.require('https')
+const uploadIcon = require('./static/images/upload.svg')
 
 class App extends Component {
 
-    constructor(props) {
-        super(props)
-        this.uploadList = []
+    // constructor(props) {
+    //     super(props)
+    // }
+
+    onDrop(acceptedFiles) {
+        this.imageFiles = acceptedFiles.filter(
+            file => /^image\/(png|jpg|jpeg)$/.test(file.type)
+        ).filter(
+            file => file.size < 1024 * 1024 * 5
+        )
+
+        this.uploadFilesThenDownload()
     }
 
-    onDropAndUploadFile(acceptedFiles) {
-        this.imageFiles = acceptedFiles.filter(file => {
-            return  /^image\/(png|jpg|jpeg)$/.test(file.type)
-        })
+    uploadFilesThenDownload() {
+        this.uploadList = this.imageFiles.map(file => this.uploadFileToServer(file))
 
-        this.uploadFiles()
-    }
-
-    uploadFiles() {
-        this.uploadList.push(this.imageFiles.map(file => this.uploadFile(file)))
-
-        Promise.all(this.uploadList).then(dataList => {
-            console.log(1123, dataList)
+        Promise.all(this.uploadList).then(fileList => {
+            fileList.forEach(file => {
+                Https.get(file.ServerData.output.url, (res) => {
+                    if(res.statusCode === 200) {
+                        res.on('data', (d) => {
+                            fs.writeFile(`./${file.name}`, d, e => {
+                                if(e) {
+                                    console.error(e)
+                                }
+                            })
+                            console.log('正在下载中', d)
+                        });
+    
+                        res.on('close', () => {
+                            console.log('下载完成')
+                        })
+                    }
+                }).on('error', (e) => {
+                    console.error(e);
+                });
+            })
+            
         }).catch(e => {
             console.error(e)
         })
     }
 
-    uploadFile(file) {
+    uploadFileToServer(file) {
+        console.log(file)
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest()
 
@@ -51,9 +78,12 @@ class App extends Component {
 
             xhr.onload = function (event) {
                 if(event.target.status === 201) {
-                    const repData = JSON.parse(event.target.responseText)
-                    console.log(repData)
-                    resolve(repData)
+                    const fileInfo = {}
+                    fileInfo.name = file.name
+                    fileInfo.ServerData = JSON.parse(event.target.responseText)
+                    resolve(fileInfo)
+                } else {
+                    reject(event.target)
                 }
             }
                 
@@ -68,17 +98,19 @@ class App extends Component {
             width: '350px',
             height: '200px',
             border: '2px #000 dashed',
-            'border-radius': '8px'
+            borderRadius: '8px'
         }
+
 
         return (
             <div className="App">
-                <div class="container">
-                    <Dropzone onDrop={(e) => this.onDropAndUploadFile(e)} class="drag-area" style={areaStyle}>
+                <div className="container">
+                    <Dropzone onDrop={(e) => this.onDrop(e)} className="drag-area" style={areaStyle}>
                         <img src={uploadIcon} alt="upload"></img>
                         <p>将图片拖至此处进行压缩</p>
                         <p>一次不能超过20张，且大小不能超过5mb</p>
                     </Dropzone>
+                    <DirManager></DirManager>
                 </div>
                 
             </div>
@@ -86,4 +118,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default App
