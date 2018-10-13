@@ -3,9 +3,9 @@ import Dropzone from 'react-dropzone'
 import DirManager from './components/dir_manager/dir_manager'
 import './App.scss'
 
-const fs = window.require('fs')
 // const electron = window.require('electron')
 // const process = window.require('process')
+const fs = window.require('fs')
 const Https = window.require('https')
 const uploadIcon = require('./static/images/upload.svg')
 
