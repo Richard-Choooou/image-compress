@@ -1,34 +1,48 @@
 import './style.scss'
 import React, {Component} from 'react'
 const electron = window.require('electron')
-console.log(electron)
+const {app, dialog, shell} = electron.remote
+const DOCUMENTS_PATH = app.getPath('documents')
+console.log(DOCUMENTS_PATH)
+
 export default class DirManager extends Component {
 
     constructor(props) {
         super(props)
+        window.userSavedPath = localStorage.getItem('userSavedPath') || DOCUMENTS_PATH
         this.state = {
-            saveFileDir: ''
+            saveFileDir: window.userSavedPath
         }
-        // console.log(app)
-        // console.log(app.getPath('documents'))
     }
     
     openChooseDir() {
-        console.log(this)
-        this.refs.chooseFileInput.click()
+        dialog.showOpenDialog({
+            title: '请选择一个文件夹',
+            defaultPath: DOCUMENTS_PATH,
+            properties: ['openDirectory', 'createDirectory']
+        }, dirs => {
+            if(!dirs) return
+            
+            window.userSavedPath = dirs[0]
+            localStorage.setItem('userSavedPath', window.userSavedPath)
+            this.setState({
+                saveFileDir: window.userSavedPath
+            })
+        }) 
     }
 
-    choosedDir(e) {
-
+    openChoosedDir() {
+        shell.openExternal(window.userSavedPath)
     }
 
     render() {
         return (
             <div className="dir-manager-container">
-            <input ref="chooseFileInput" onChange={(e) => this.choosedDir(e)} type="file" directory="" webkitdirectory="" hidden></input>
-                <p className="dir-path">
-                    /user/local/images
-                </p><button className="btn" onClick={(e) => this.openChooseDir(e)}>选择</button>
+                <div class="dir-tool">
+                    <p className="dir-path">{this.state.saveFileDir}</p>
+                    <button className="btn" onClick={(e) => this.openChooseDir(e)}>选择</button>
+                    <button className="btn" onClick={(e) => this.openChoosedDir(e)}>打开目录</button>
+                </div>
                 <label><input type="checkbox"/>是否创建独立文件夹存放图片</label>
             </div>
         )

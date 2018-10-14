@@ -11,5 +11,26 @@
             width: 60px;
             margin-top: 40px;
         }
+
+        p {
+            margin-bottom: 20px;
+        }
+    }
+
+    .progress-container {
+        margin: 0 auto;
+        width: 440px;
+
+        .progress-item {
+            margin-top: 8px;
+            padding: 4px 8px;
+            border: 1px #999 solid;
+            p {
+                margin: 0;
+                width: 440px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
     }
 }

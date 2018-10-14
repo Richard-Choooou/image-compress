@@ -4,6 +4,7 @@
   "private": true,
   "main": "./main.js",
   "dependencies": {
+    "antd": "^3.10.1",
     "electron": "^3.0.3",
     "node-sass": "^4.9.3",
     "react": "^16.5.2",
