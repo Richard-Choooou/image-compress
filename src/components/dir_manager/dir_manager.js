@@ -38,7 +38,7 @@ export default class DirManager extends Component {
     render() {
         return (
             <div className="dir-manager-container">
-                <div class="dir-tool">
+                <div className="dir-tool">
                     <p className="dir-path">{this.state.saveFileDir}</p>
                     <button className="btn" onClick={(e) => this.openChooseDir(e)}>选择</button>
                     <button className="btn" onClick={(e) => this.openChoosedDir(e)}>打开目录</button>
