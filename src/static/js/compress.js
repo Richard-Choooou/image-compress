@@ -1,21 +1,25 @@
 import AddEvents from './events'
+// import imagemin from 'imagemin'
 const fs = window.require('fs') 
 const Https = window.require('https')
-// const imagemin = require('../../../node_modules/imagemin') 
-const imagemin = require('imagemin') 
-// const imageminJpegtran = require('imagemin-jpegtran')
-// const imageminPngquant = require('imagemin-pngquant')
-
+const imagemin = window.imagemin
+const imageminJpegtran = window.imageminJpegtran
+const imageminPngquant = window.imageminPngquant
+const imageminGifsicle = window.imageminGifsicle
 
 class Compress {
     constructor(files, options) {
         this.isOnline = window.navigator.onLine
+        console.log(files)
         this.files = files
+
         this.options = Object.assign({
             userSavedPath: window.userSavedPath,
             createNewfolder: true
         }, options)
+
         this.uploadList = new Map()
+
         if(this.isOnline) {
             // this.onlineCompress()
             this.offlineCompress()
@@ -36,7 +40,8 @@ class Compress {
                 return this.downloadToLocal(xhrResponse, uploadPromise, file)
             }))
 
-            return (last.set(uploadPromise, {}), last)
+            last.set(uploadPromise, {})
+            return last
         }, new Map())
 
         Promise.all(this.uploadList.keys()).then(data => {
@@ -135,26 +140,29 @@ class Compress {
         }
 
         return new Promise((resolve, reject) => {
-            Https.get(ServerData.output.url, (res) => {
+            Https.get(ServerData.output.url, (res, req) => {
+                res.setEncoding('binary')
                 if(res.statusCode === 200) {
+                    let imgData = ''
                     res.on('data', (d) => {
-                        fs.writeFile(`${window.userSavedPath}/${file.name}`, d, e => {
-                            if(e) {
-                                console.error(e)
-                                setState({
-                                    state: 'error',
-                                })
-                            }
-                        })
-
+                        imgData += d
                         setState({
                             state: 'downloading',
                         })
                         console.log('正在下载中')
                     });
-    
-                    res.on('close', () => {
-                        console.log('下载完成')
+
+                    res.on('end', () => {
+                        fs.writeFile(`${window.userSavedPath}/${file.name}`, imgData, 'binary', e => {
+                            if(e) {
+                                console.error(e)
+                                setState({
+                                    state: 'error',
+                                })
+                            } else {
+                                console.log('保存成功')
+                            }
+                        })
                         setState({
                             isDone: true,
                             state: 'downloaded',
@@ -173,20 +181,17 @@ class Compress {
         })
     }
 
-
-    offlineCompress() {
-        // (async () => {
-        //     let filePathList = this.files.map(file => file.path)
-        //     const files = await imagemin(filePathList, this.options.userSavedPath, {
-        //         plugins: [
-        //             imageminJpegtran(),
-        //             imageminPngquant({quality: '65-80'})
-        //         ]
-        //     });
-         
-        //     console.log(files);
-        //     //=> [{data: <Buffer 89 50 4e …>, path: 'build/images/foo.jpg'}, …]
-        // })();
+    async offlineCompress() {
+        console.log(this.files)
+        let paths = this.files.map(file => file.path)
+        console.log(paths)
+        await imagemin(paths, window.userSavedPath, {
+            use: [
+                imageminGifsicle(),
+                imageminPngquant(),
+                imageminJpegtran()
+            ]
+        });
     }
 }
 
