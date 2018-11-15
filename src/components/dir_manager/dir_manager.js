@@ -1,5 +1,6 @@
 import './style.scss'
 import React, {Component} from 'react'
+import { Checkbox } from 'antd'
 const electron = window.require('electron')
 const {app, dialog, shell} = electron.remote
 const DOCUMENTS_PATH = app.getPath('documents')
@@ -35,6 +36,10 @@ export default class DirManager extends Component {
         shell.openExternal(window.userSavedPath)
     }
 
+    checkboxChange(e) {
+        console.log(e)
+    }
+
     render() {
         return (
             <div className="dir-manager-container">
@@ -43,7 +48,8 @@ export default class DirManager extends Component {
                     <button className="btn" onClick={(e) => this.openChooseDir(e)}>选择</button>
                     <button className="btn" onClick={(e) => this.openChoosedDir(e)}>打开目录</button>
                 </div>
-                <label><input type="checkbox"/>是否创建独立文件夹存放图片</label>
+                
+                <label><Checkbox onChange={e => this.checkboxChange(e)}>是否创建独立文件夹存放图片</Checkbox></label>
             </div>
         )
     }
