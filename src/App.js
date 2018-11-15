@@ -5,6 +5,8 @@ import Progress from 'antd/lib/progress'
 import Compress from './static/js/compress'
 import 'antd/lib/progress/style/css'
 import './App.scss'
+import Slider from 'antd/lib/slider'
+import 'antd/lib/slider/style/css'
 
 // const electron = window.require('electron')
 // const process = window.require('process')
@@ -17,6 +19,11 @@ class App extends Component {
         this.state = {
             uploadList: new Map()
         }
+
+        this.fileFilter = {
+            online: /^image\/(png|jpg|jpeg)$/,
+            offline: /^image\/(png|jpg|jpeg|gif)$/
+        }
     }
 
     onDrop(acceptedFiles) {
@@ -25,9 +32,9 @@ class App extends Component {
         })
         console.log(acceptedFiles)
         this.imageFiles = acceptedFiles.filter(
-            file => /^image\/(png|jpg|jpeg)$/.test(file.type)
+            file => window.navigator.onLine ? this.fileFilter.offline.test(file.type) : this.fileFilter.offline.test(file.type) 
         ).filter(
-            file => file.size < 1024 * 1024 * 5
+            file => window.navigator.onLine ? true : file.size < 1024 * 1024 * 5
         )
 
         const compressInstance = new Compress(this.imageFiles)
@@ -87,8 +94,12 @@ class App extends Component {
                         <p>一次不能超过20张，且大小不能超过5mb</p>
                     </Dropzone>
                     <DirManager></DirManager>
+                    <div className="compress-level">
+                        <span>压缩等级：</span>
+                        <Slider className="compress-level-slider" defaultValue={3} value={3} dots={true} step={1} min={1} max={10} />
+                    </div>
                     <div className="progress-container">
-                    {getProgressList(this.state.uploadList)}
+                        {getProgressList(this.state.uploadList)}
                     </div>
                 </div>
                 

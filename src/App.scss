@@ -13,7 +13,7 @@
         }
 
         p {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
     }
 
@@ -31,6 +31,18 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
+        }
+    }
+
+    .compress-level {
+        margin: 0 auto;
+        width: 440px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .compress-level-slider {
+            width: 340px;
         }
     }
 }
