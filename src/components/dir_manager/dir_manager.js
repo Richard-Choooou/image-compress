@@ -31,6 +31,10 @@ class DirManager extends Component {
         this.props.setCreateNewDirState(e.target.checked)
     }
 
+    checkboxChange(e) {
+        console.log(e)
+    }
+
     render() {
         return (
             <div className="dir-manager-container">
