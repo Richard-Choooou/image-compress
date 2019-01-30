@@ -35,14 +35,33 @@
     }
 
     .compress-level {
-        margin: 0 auto;
+        margin: 10px auto;
         width: 440px;
+        height: 21px;
         display: flex;
         align-items: center;
+        vertical-align: middle;
         justify-content: space-between;
 
-        .compress-level-slider {
-            width: 340px;
+        .left {
+            width: 64px;
         }
+
+        .right {
+            // width: 400px;
+            display: flex;
+            align-items: center;
+            vertical-align: middle;
+
+            .ant-slider {
+                margin: 0;
+            }
+
+            .compress-level-slider {
+                width: 280px;
+            }
+        }
+
+        
     }
 }

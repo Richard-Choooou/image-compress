@@ -6,23 +6,27 @@
   "dependencies": {
     "antd": "^3.10.1",
     "electron": "^3.0.3",
+    "fs-extra": "^7.0.1",
     "imagemin": "^6.0.0",
     "imagemin-gifsicle": "^6.0.1",
     "imagemin-jpegtran": "^6.0.0",
+    "imagemin-mozjpeg": "^8.0.0",
     "imagemin-pngquant": "^6.0.0",
     "node-sass": "^4.9.3",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-dropzone": "^6.0.3",
+    "react-redux": "^6.0.0",
     "react-scripts": "2.0.4",
+    "redux": "^4.0.1",
     "sass-loader": "^7.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start & electron .",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron-start": "electron ."
+    "electron": "electron ."
   },
   "eslintConfig": {
     "extends": "react-app"

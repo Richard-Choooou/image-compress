@@ -1,4 +1,6 @@
 global.imagemin = require('imagemin')
-global.imageminJpegtran = require('imagemin-jpegtran')
+// global.imageminJpegtran = require('imagemin-jpegtran')
 global.imageminPngquant = require('imagemin-pngquant')
 global.imageminGifsicle = require('imagemin-gifsicle')
+global.imageminMozJpeg = require('imagemin-mozjpeg')
+global.fsExtra = require('fs-extra')

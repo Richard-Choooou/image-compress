@@ -1,16 +1,24 @@
 import AddEvents from './events'
-// import imagemin from 'imagemin'
-const fs = window.require('fs') 
+import store from '../../store'
+
+const path = window.require('path')
 const Https = window.require('https')
 const imagemin = window.imagemin
-const imageminJpegtran = window.imageminJpegtran
+const imageminMozJpeg = window.imageminMozJpeg
 const imageminPngquant = window.imageminPngquant
 const imageminGifsicle = window.imageminGifsicle
+const fsExtra = window.fsExtra
 
+let userConfig = store.getState()
+store.subscribe(() => {
+    userConfig = store.getState()
+})
 class Compress {
     constructor(files, options) {
-        this.isOnline = window.navigator.onLine
-        console.log(files)
+        
+        this.startTime = Date.now()
+        this.savePath = path.resolve(userConfig.saveFilesDir, userConfig.isCreateNewDir ? this.startTime + '' : '')
+        this.isOnline = userConfig.compressMode === 'online'
         this.files = files
 
         this.options = Object.assign({
@@ -21,8 +29,7 @@ class Compress {
         this.uploadList = new Map()
 
         if(this.isOnline) {
-            // this.onlineCompress()
-            this.offlineCompress()
+            this.onlineCompress()
         } else {
             this.offlineCompress()
         }
@@ -153,7 +160,8 @@ class Compress {
                     });
 
                     res.on('end', () => {
-                        fs.writeFile(`${window.userSavedPath}/${file.name}`, imgData, 'binary', e => {
+                        
+                        fsExtra.outputFile(path.resolve(this.savePath, file.name), imgData, 'binary', e => {
                             if(e) {
                                 console.error(e)
                                 setState({
@@ -182,16 +190,33 @@ class Compress {
     }
 
     async offlineCompress() {
-        console.log(this.files)
         let paths = this.files.map(file => file.path)
-        console.log(paths)
-        await imagemin(paths, window.userSavedPath, {
+        const map = new Map([
+            [/\.jpe?g$/, () => imageminMozJpeg({
+                    quality: 100 - userConfig.compressLevel * 10
+            })],
+            [/\.png$/, () => imageminPngquant({
+                quality: [Math.max(0, 1 - userConfig.compressLevel / 10 - 0.1), Math.min(1, 1 - userConfig.compressLevel / 10 + 0.1)]
+            })],
+            [/\.gif$/, () => imageminGifsicle({
+                optimizationLevel: Math.floor(userConfig.compressLevel / 3)
+            })]
+        ])
+
+        await imagemin(paths, this.savePath, {
             use: [
-                imageminGifsicle(),
-                imageminPngquant(),
-                imageminJpegtran()
+                imageminGifsicle({
+                    optimizationLevel: Math.floor(userConfig.compressLevel / 3)
+                }),
+                imageminPngquant({
+                    quality: 100 - userConfig.compressLevel * 10
+                    // quality: [Math.max(0, 1 - userConfig.compressLevel / 10 - 0.1), Math.min(1, 1 - userConfig.compressLevel / 10 + 0.1)]
+                }),
+                imageminMozJpeg({
+                    quality: 100 - userConfig.compressLevel * 10
+                })
             ]
-        });
+        })
     }
 }
 
