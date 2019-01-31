@@ -190,20 +190,7 @@ class Compress {
     }
 
     async offlineCompress() {
-        let paths = this.files.map(file => file.path)
-        const map = new Map([
-            [/\.jpe?g$/, () => imageminMozJpeg({
-                    quality: 100 - userConfig.compressLevel * 10
-            })],
-            [/\.png$/, () => imageminPngquant({
-                quality: [Math.max(0, 1 - userConfig.compressLevel / 10 - 0.1), Math.min(1, 1 - userConfig.compressLevel / 10 + 0.1)]
-            })],
-            [/\.gif$/, () => imageminGifsicle({
-                optimizationLevel: Math.floor(userConfig.compressLevel / 3)
-            })]
-        ])
-
-        await imagemin(paths, this.savePath, {
+        await imagemin(this.files.map(file => file.path), this.savePath, {
             use: [
                 imageminGifsicle({
                     optimizationLevel: Math.floor(userConfig.compressLevel / 3)

@@ -1,5 +1,12 @@
 .App {
 
+    .attachment-full {
+        position: fixed;
+        right: 0;
+        top: 0;
+        cursor: pointer;
+    }
+
     .container {
         margin-top: 80px;
     }
@@ -58,7 +65,7 @@
             }
 
             .compress-level-slider {
-                width: 280px;
+                width: 270px;
             }
         }
 

@@ -9,7 +9,14 @@ import Slider from 'antd/lib/slider'
 import 'antd/lib/slider/style/css'
 import Switch from 'antd/lib/switch'
 import 'antd/lib/switch/style/css'
+import Icon from 'antd/lib/icon'
+import 'antd/lib/icon/style/css'
+import Tooltip from 'antd/lib/tooltip'
+import 'antd/lib/tooltip/style/css'
 import { connect } from 'react-redux'
+const electron = window.require('electron')
+const { shell } = electron.remote
+
 
 const uploadIcon = require('./static/images/upload.svg')
 
@@ -65,6 +72,10 @@ class App extends Component {
         this.props.setCompressLevel(value)
     }
 
+    goToGitHub() {
+        shell.openExternal('https://github.com/Richard-Choooou/image-compress')
+    }
+
     render() {
         const areaStyle = {
             margin: '0 auto',
@@ -104,17 +115,24 @@ class App extends Component {
 
         return (
             <div className="App">
+                <img onClick={this.goToGitHub} width="120" height="120" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_gray_6d6d6d.png?resize=149%2C149" className="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1" />
                 <div className="container">
                     <Dropzone onDrop={(e) => this.onDrop(e)} className="drag-area" style={areaStyle}>
                         <img src={uploadIcon} alt="upload"></img>
                         <p>将图片拖至此处进行压缩</p>
                         {this.props.compressMode === 'online' && <div><p>正在使用在线压缩引擎</p><p>一次不能超过20张，且大小不能超过5mb</p></div>}
+                        {this.props.compressMode === 'offline' && <div><p>正在使用离线压缩引擎</p><p>支持gif格式文件压缩</p></div>}
                     </Dropzone>
                     <DirManager></DirManager>
                     <div className="compress-level">
                         <Switch className="left" size="small" checkedChildren="online" unCheckedChildren="offline" checked={this.props.compressMode === 'online'} defaultChecked onChange={e => this.onCompressModeChange(e)} />
                         <div className="right">
-                            <span>压缩等级：</span>
+                            <span>
+                                压缩等级
+                                <Tooltip title="压缩等级越高，图片质量越差，建议等级4">
+                                    <Icon  style={{margin: '0 5px'}} type="question-circle" />
+                                </Tooltip>
+                               ：</span>
                             <Slider disabled={this.props.compressMode === 'online'} onChange={e => this.onCompressLevelChange(e)} className="compress-level-slider" defaultValue={3} value={this.props.compressLevel} dots={true} step={1} min={1} max={10} />
                         </div>
                     </div>

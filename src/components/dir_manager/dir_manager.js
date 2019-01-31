@@ -4,14 +4,10 @@ import Checkbox from 'antd/lib/checkbox'
 import 'antd/lib/checkbox/style/css'
 import { connect } from 'react-redux'
 const electron = window.require('electron')
-const { app, dialog, shell } = electron.remote
+const { dialog, shell } = electron.remote
 
 class DirManager extends Component {
-
-    constructor(props) {
-        super(props)
-    }
-
+    
     openChooseDir() {
         dialog.showOpenDialog({
             title: '请选择一个文件夹',
@@ -29,10 +25,6 @@ class DirManager extends Component {
 
     isCreateNewDirChange(e) {
         this.props.setCreateNewDirState(e.target.checked)
-    }
-
-    checkboxChange(e) {
-        console.log(e)
     }
 
     render() {

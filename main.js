@@ -33,36 +33,36 @@ function createWindow() {
         mainWindow = null
     })
 
-    setMenu()
+    // setMenu()
 
-    function setMenu() {
-        const template = [
-            {
-                label: '设置',
-                submenu: [
-                    { 
-                        label: '文件存储位置' 
-                    },
-                    { 
-                        role: 'toggledevtools'
-                    }
-                ]
-            },
-            {
-                label: 'fork me on github',
-                submenu: [
-                    {
-                        label: 'fork me on github',
-                        click() { require('electron').shell.openExternal('https://github.com/Richard-Choooou/image-compress') }
-                    }
-                ]
-            }
-        ]
+    // function setMenu() {
+    //     const template = [
+    //         {
+    //             label: '设置',
+    //             submenu: [
+    //                 { 
+    //                     label: '文件存储位置' 
+    //                 },
+    //                 { 
+    //                     role: 'toggledevtools'
+    //                 }
+    //             ]
+    //         },
+    //         {
+    //             label: 'fork me on github',
+    //             submenu: [
+    //                 {
+    //                     label: 'fork me on github',
+    //                     click() { require('electron').shell.openExternal('https://github.com/Richard-Choooou/image-compress') }
+    //                 }
+    //             ]
+    //         }
+    //     ]
 
 
-        const menu = Menu.buildFromTemplate(template)
-        Menu.setApplicationMenu(menu)
-    }
+    //     const menu = Menu.buildFromTemplate(template)
+    //     Menu.setApplicationMenu(menu)
+    // }
 }
 
 // This method will be called when Electron has finished
