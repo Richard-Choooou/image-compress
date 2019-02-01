@@ -18,10 +18,12 @@ function createWindow() {
     })
     mainWindow.setMinimumSize(800, 600)
     mainWindow.webContents.openDevTools()
+
+
     // mainWindow.set
     // and load the index.html of the app.
-    //   mainWindow.loadFile('index.html')
-    mainWindow.loadURL('http://127.0.0.1:3000')
+      mainWindow.loadFile('./build/index.html')
+    // mainWindow.loadURL('http://127.0.0.1:3000')
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
 
@@ -32,37 +34,6 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null
     })
-
-    // setMenu()
-
-    // function setMenu() {
-    //     const template = [
-    //         {
-    //             label: '设置',
-    //             submenu: [
-    //                 { 
-    //                     label: '文件存储位置' 
-    //                 },
-    //                 { 
-    //                     role: 'toggledevtools'
-    //                 }
-    //             ]
-    //         },
-    //         {
-    //             label: 'fork me on github',
-    //             submenu: [
-    //                 {
-    //                     label: 'fork me on github',
-    //                     click() { require('electron').shell.openExternal('https://github.com/Richard-Choooou/image-compress') }
-    //                 }
-    //             ]
-    //         }
-    //     ]
-
-
-    //     const menu = Menu.buildFromTemplate(template)
-    //     Menu.setApplicationMenu(menu)
-    // }
 }
 
 // This method will be called when Electron has finished
