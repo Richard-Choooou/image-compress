@@ -17,13 +17,21 @@ function createWindow() {
         },
     })
     mainWindow.setMinimumSize(800, 600)
-    mainWindow.webContents.openDevTools()
+    
 
 
     // mainWindow.set
     // and load the index.html of the app.
-      mainWindow.loadFile('./build/index.html')
-    // mainWindow.loadURL('http://127.0.0.1:3000')
+    
+    console.log(process.env.NODE_ENV)
+    if (process.env.NODE_ENV === 'development') {
+        mainWindow.loadURL('http://127.0.0.1:3000')
+        mainWindow.webContents.openDevTools()
+    } else {
+        mainWindow.loadFile(path.resolve(__dirname, './build/index.html'))
+    }
+      
+    // 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
 

@@ -20,12 +20,6 @@ class Compress {
         this.savePath = path.resolve(userConfig.saveFilesDir, userConfig.isCreateNewDir ? this.startTime + '' : '')
         this.isOnline = userConfig.compressMode === 'online'
         this.files = files
-
-        this.options = Object.assign({
-            userSavedPath: window.userSavedPath,
-            createNewfolder: true
-        }, options)
-
         this.uploadList = new Map()
 
         if(this.isOnline) {
@@ -190,18 +184,19 @@ class Compress {
     }
 
     async offlineCompress() {
+        debugger
         await imagemin(this.files.map(file => file.path), this.savePath, {
             use: [
-                imageminGifsicle({
-                    optimizationLevel: Math.floor(userConfig.compressLevel / 3)
-                }),
-                imageminPngquant({
-                    quality: 100 - userConfig.compressLevel * 10
-                    // quality: [Math.max(0, 1 - userConfig.compressLevel / 10 - 0.1), Math.min(1, 1 - userConfig.compressLevel / 10 + 0.1)]
-                }),
-                imageminMozJpeg({
-                    quality: 100 - userConfig.compressLevel * 10
-                })
+                // imageminGifsicle({
+                //     optimizationLevel: Math.floor(userConfig.compressLevel / 3)
+                // }),
+                // imageminPngquant({
+                //     quality: 100 - userConfig.compressLevel * 10
+                //     // quality: [Math.max(0, 1 - userConfig.compressLevel / 10 - 0.1), Math.min(1, 1 - userConfig.compressLevel / 10 + 0.1)]
+                // }),
+                // imageminMozJpeg({
+                //     quality: 100 - userConfig.compressLevel * 10
+                // })
             ]
         })
     }
