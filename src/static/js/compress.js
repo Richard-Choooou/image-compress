@@ -49,6 +49,7 @@ class Compress {
         }, new Map())
 
         Promise.all(this.uploadList.keys()).then(data => {
+            this.openCompressSuccessNotification()
             console.log('全部压缩完成')
         }).catch(e => {
             console.log(e)
@@ -201,6 +202,10 @@ class Compress {
             ]
         })
 
+        this.openCompressSuccessNotification()        
+    }
+
+    openCompressSuccessNotification() {
         new Notification('压缩完成', {
             body: '点击打开' 
         }).onclick = () => {

@@ -15,8 +15,7 @@
 
 # 预览
 
-![compress](https://user-images.githubusercontent.com/23492006/48561276-88ee0a80-e92a-11e8-946a-3a26c27e03e4.gif)
-
+![121](https://user-images.githubusercontent.com/23492006/52162141-6211ca00-270a-11e9-955c-d1d90b58ab6a.gif)
 
 # 开发
 运行
