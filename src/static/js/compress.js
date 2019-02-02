@@ -8,21 +8,24 @@ const imageminMozJpeg = window.imageminMozJpeg
 const imageminPngquant = window.imageminPngquant
 const imageminGifsicle = window.imageminGifsicle
 const fsExtra = window.fsExtra
+const electron = window.require('electron')
+const { shell } = electron.remote
 
 let userConfig = store.getState()
 store.subscribe(() => {
     userConfig = store.getState()
 })
+
 class Compress {
     constructor(files, options) {
-        
+
         this.startTime = Date.now()
         this.savePath = path.resolve(userConfig.saveFilesDir, userConfig.isCreateNewDir ? this.startTime + '' : '')
         this.isOnline = userConfig.compressMode === 'online'
         this.files = files
         this.uploadList = new Map()
 
-        if(this.isOnline) {
+        if (this.isOnline) {
             this.onlineCompress()
         } else {
             this.offlineCompress()
@@ -36,7 +39,7 @@ class Compress {
     onlineCompress() {
         this.uploadList = this.files.reduce((last, file) => {
             let uploadPromise = this.uploadFileToServer(file)
-            
+
             uploadPromise.then((xhrResponse => {
                 return this.downloadToLocal(xhrResponse, uploadPromise, file)
             }))
@@ -66,7 +69,7 @@ class Compress {
                     state: 'upload',
                     progress: 0,
                     isDone: false
-                }, this.uploadList.get(xhrPromise), obj) 
+                }, this.uploadList.get(xhrPromise), obj)
 
                 this.uploadList.set(xhrPromise, obj)
 
@@ -74,10 +77,10 @@ class Compress {
             }
 
             xhr.upload.onprogress = (e) => {
-                if(e.type === "progress") {
+                if (e.type === "progress") {
                     let progress = (e.loaded / e.total * 100).toFixed(0)
                     let state = {}
-                    if(progress < 100) {
+                    if (progress < 100) {
                         state = {
                             progress,
                             state: 'uploading'
@@ -101,16 +104,16 @@ class Compress {
                 reject(e)
             }
 
-            xhr.onerror = function(e) {
+            xhr.onerror = function (e) {
                 console.error('onerror', arguments)
                 setState({
                     state: 'error'
                 })
                 reject(e)
             }
- 
+
             xhr.onload = function (event) {
-                if(event.target.status === 201) {
+                if (event.target.status === 201) {
                     setState({
                         state: 'compressed'
                     })
@@ -119,8 +122,8 @@ class Compress {
                     reject(event.target)
                 }
             }
-                
-            xhr.send(file)    
+
+            xhr.send(file)
         })
 
         return xhrPromise
@@ -143,7 +146,7 @@ class Compress {
         return new Promise((resolve, reject) => {
             Https.get(ServerData.output.url, (res, req) => {
                 res.setEncoding('binary')
-                if(res.statusCode === 200) {
+                if (res.statusCode === 200) {
                     let imgData = ''
                     res.on('data', (d) => {
                         imgData += d
@@ -154,9 +157,9 @@ class Compress {
                     });
 
                     res.on('end', () => {
-                        
+
                         fsExtra.outputFile(path.resolve(this.savePath, file.name), imgData, 'binary', e => {
-                            if(e) {
+                            if (e) {
                                 console.error(e)
                                 setState({
                                     state: 'error',
@@ -184,21 +187,25 @@ class Compress {
     }
 
     async offlineCompress() {
-        debugger
         await imagemin(this.files.map(file => file.path), this.savePath, {
             use: [
-                // imageminGifsicle({
-                //     optimizationLevel: Math.floor(userConfig.compressLevel / 3)
-                // }),
-                // imageminPngquant({
-                //     quality: 100 - userConfig.compressLevel * 10
-                //     // quality: [Math.max(0, 1 - userConfig.compressLevel / 10 - 0.1), Math.min(1, 1 - userConfig.compressLevel / 10 + 0.1)]
-                // }),
-                // imageminMozJpeg({
-                //     quality: 100 - userConfig.compressLevel * 10
-                // })
+                imageminGifsicle({
+                    optimizationLevel: Math.floor(userConfig.compressLevel / 3)
+                }),
+                imageminPngquant({
+                    quality: 100 - userConfig.compressLevel * 10
+                }),
+                imageminMozJpeg({
+                    quality: 100 - userConfig.compressLevel * 10
+                })
             ]
         })
+
+        new Notification('压缩完成', {
+            body: '点击打开' 
+        }).onclick = () => {
+            shell.openItem(this.savePath)
+        }
     }
 }
 

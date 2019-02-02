@@ -22,7 +22,8 @@
       "category": "tool"
     },
     "extends": null,
-    "files": [ "build", "*.js", "public"]
+    "files": ["build", "*.js", "public"],
+    "asar": false
   },
   "eslintConfig": {
     "extends": "react-app"

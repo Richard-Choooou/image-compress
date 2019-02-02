@@ -1,23 +1,22 @@
 import React, { Component } from 'react'
 import Dropzone from 'react-dropzone'
 import DirManager from './components/dir_manager/dir_manager'
-import Progress from 'antd/lib/progress'
 import Compress from './static/js/compress'
-import 'antd/lib/progress/style/css'
-import './App.scss'
+import Progress from 'antd/lib/progress'
 import Slider from 'antd/lib/slider'
-import 'antd/lib/slider/style/css'
 import Switch from 'antd/lib/switch'
-import 'antd/lib/switch/style/css'
-import Icon from 'antd/lib/icon'
-import 'antd/lib/icon/style/css'
 import Tooltip from 'antd/lib/tooltip'
+import Icon from 'antd/lib/icon'
+import 'antd/lib/progress/style/css'
+import 'antd/lib/slider/style/css'
+import 'antd/lib/switch/style/css'
+import 'antd/lib/icon/style/css'
 import 'antd/lib/tooltip/style/css'
+import './App.scss'
+
 import { connect } from 'react-redux'
 const electron = window.require('electron')
 const { shell } = electron.remote
-
-
 const uploadIcon = require('./static/images/upload.svg')
 
 class App extends Component {
